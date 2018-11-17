@@ -117,7 +117,7 @@ public class RCTMqtt implements MqttCallback{
 		if(_options.hasKey("willMsg"))
 			defaultOptions.putString("willMsg",_options.getString("willMsg"));
 		if(_options.hasKey("willtopic"))
-			defaultOptions.putString("willMsg",_options.getString("willMsg"));
+			defaultOptions.putString("willtopic",_options.getString("willtopic"));
 		if(_options.hasKey("willQos"))
 			defaultOptions.putInt("willQos",_options.getInt("willQos"));
 		if(_options.hasKey("willRetainFlag"))
@@ -179,7 +179,18 @@ public class RCTMqtt implements MqttCallback{
     }
 
     if(options.getBoolean("will")) {
-
+      byte[] payload = new byte[0];
+      String willtopic = options.getString("willtopic");
+      String willMsg = options.getString("willMsg");
+      int willQos = options.getInt("willQos");
+      boolean willRetainFlag = options.getBoolean("willRetainFlag");
+      try {
+        payload = willMsg.getBytes("UTF_8");
+        mqttoptions.setWill(willtopic, payload, willQos, willRetainFlag);
+        log(willtopic + willMsg);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     memPer = new MemoryPersistence();
